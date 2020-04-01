@@ -1,6 +1,6 @@
 window.onload = () => {
     let key, text;
-    let arrayOfRussianSymbols = ['ё', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace', 'Tab', 'й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х', 'ъ', '|', 'Del', 'Caps Lock', 'ф', 'ы', 'в', 'а', 'п', 'р', 'о', 'л', 'д', 'ж', 'э', 'Enter', 'Shift', 'я', 'ч', 'с', 'м', 'и', 'т', 'ь', 'б', 'ю', '.', '', 'Shift', 'Ctrl', 'Win', 'Alt', ' ', 'Alt', 'Ctrl', '', '', ''];
+    let arrayOfRussianSymbols = ['ё', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace', 'Tab', 'й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х', 'ъ', '|', 'Del', 'Caps lock', 'ф', 'ы', 'в', 'а', 'п', 'р', 'о', 'л', 'д', 'ж', 'э', 'Enter', 'Shift', 'я', 'ч', 'с', 'м', 'и', 'т', 'ь', 'б', 'ю', '.', '', 'Shift', 'Ctrl', 'Win', 'Alt', ' ', 'Alt', 'Ctrl', '', '', ''];
     let body = document.querySelector('body');
     let page = document.querySelector('html');
     let meta = document.createElement('META');
@@ -18,15 +18,11 @@ window.onload = () => {
         key.append(text);
         key.classList.add('key');
     });
-    let arrayOfKeys = document.querySelectorAll('.key');
-    console.log(arrayOfKeys);
-    key.addEventListener('keydown', () => {
-        item.classList.add('pushed-button');
-    })
-    arrayOfKeys.forEach((item, i) => {
-        item.addEventListener('keydown', () => {
-            item.classList.add('pushed-button');
-        })
+    document.addEventListener('keydown', event => {
+        let indexOfPushedButton = arrayOfRussianSymbols.indexOf(event.key);
+        let arrOfKeys = keyboard.childNodes;
+        let elem = arrOfKeys[indexOfPushedButton];
+        elem.classList.add('pushed-button');
     });
 
 }
