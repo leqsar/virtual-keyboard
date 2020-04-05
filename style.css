@@ -4,6 +4,12 @@
     grid-template-rows: repeat(5, 50px);
 }
 
+textarea {
+    width: 80vw;
+    height: 200px;
+    margin: 0 10vw;
+}
+
 .key {
     display: flex;
     justify-content: center;
