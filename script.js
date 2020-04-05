@@ -25,11 +25,18 @@ window.onload = () => {
         }
         defineButton();
         elem.classList.add('pushed-button');
-        textOutput();
+        textOutput(elem);
     });
     document.addEventListener('keyup', event => {
         defineButton();
         elem.classList.remove('pushed-button');
+    });
+    keyboard.addEventListener('mousedown', event => {
+        event.target.classList.add('pushed-button');
+        textOutput(event.target);
+    });
+    keyboard.addEventListener('mouseup', event => {
+        event.target.classList.remove('pushed-button');
     });
 
     function keyGeneration(arrayOfSymbols) {
@@ -64,8 +71,8 @@ window.onload = () => {
         });
     }
 
-    function textOutput() {
-        textarea.textContent = `${textarea.textContent+elem.textContent}`;
+    function textOutput(pressedButton) {
+        textarea.textContent = `${textarea.textContent+pressedButton.textContent}`;
     }
 
     function defineButton() {
