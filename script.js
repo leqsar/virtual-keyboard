@@ -85,6 +85,15 @@ window.onload = () => {
             textarea.textContent = `${content.join('')}`;
             setCaret(caretPosition-1);
         }
+        if (event.key == 'Delete') {
+            let content = textarea.textContent.split(''),
+                caretPosition = textarea.selectionEnd;
+            if (caretPosition < textarea.textContent.length) {
+                content.splice(caretPosition, 1);
+                textarea.textContent = `${content.join('')}`;
+                setCaret(caretPosition);
+            }
+        }
         isShift = event.getModifierState("Shift") ? true : false;
         isCapsLock = event.getModifierState("CapsLock") ? true : false;
         defineButton();
