@@ -50,6 +50,7 @@ window.onload = () => {
         isCapsLock = event.getModifierState("CapsLock") ? true : false;
         defineButton();
         elem.classList.add('pushed-button');
+        animation(elem);
         textOutput(elem);
         if (!isCaretShift) {
             setCaret(textarea.textContent.length);
@@ -60,6 +61,7 @@ window.onload = () => {
     });
     document.addEventListener('keyup', event => {
         defineButton();
+        animation(elem);
         elem.classList.remove('pushed-button');
     });
     keyboard.addEventListener('mousedown', event => {
@@ -67,9 +69,11 @@ window.onload = () => {
             alert('you can push capslock button by mouse, but this action wouldnt do anything, because in your system capslock will not change');
         }
         event.target.classList.add('pushed-button');
+        animation(event.target);
         textOutput(event.target);
     });
     keyboard.addEventListener('mouseup', event => {
+        animation(event.target);
         event.target.classList.remove('pushed-button');
     });
 
@@ -137,5 +141,13 @@ window.onload = () => {
 
     function setCaret(position) {
         textarea.selectionStart = textarea.selectionEnd = position;
+    }
+
+    function animation(elem) {
+        if (elem.style.boxShadow == 'none') {
+            elem.style.boxShadow = '3px 3px 1.5px';
+        } else {
+            elem.style.boxShadow = 'none';
+        }
     }
 }
