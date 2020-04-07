@@ -9,7 +9,9 @@ window.onload = () => {
         isCaretShift = false,
         specialSymbols = {
             'Tab':'\t',
-            'Enter':'\n'
+            'Enter':'\n',
+            'ArrowUp':'↑',
+            'ArrowDown':'↓'
         };
     const body = document.querySelector('body'),
         keyboard = document.createElement('DIV'),
@@ -22,7 +24,7 @@ window.onload = () => {
     body.append(keyboard);
     body.append(warningContainer);
     keyboard.classList.add('keyboard-wrap');
-    languageContainer.textContent = `${language}`;
+    languageContainer.textContent = `${language}(Ctrl+Shift)`;
     warningContainer.textContent = 'You can click on CapsLock BY MOUSE, but nothing will happen, because state of Capslock in your system will not change';
 
     if (language == 'russian') {
@@ -44,22 +46,6 @@ window.onload = () => {
         if (specialButtons.indexOf(event.key) !== -1) {
             event.preventDefault();
         }
-        /*if (event.key == 'ArrowDown') {
-            let content = textarea.textContent.split(''),
-                indexesOfLineBreaks = [],
-                caretPosition = textarea.selectionEnd;
-            content.forEach((item, i) => {
-                if (item == "\n") indexesOfLineBreaks.push(i);
-            });
-            indexesOfLineBreaks.filter(elem => elem < caretPosition);
-            let length = indexesOfLineBreaks.length;
-            let caretNewPosition;
-            if (length >= 2) {
-                caretNewPosition = indexesOfLineBreaks[length-2] + (caretPosition - indexesOfLineBreaks[length-1]);
-                setCaret(caretNewPosition);
-                isCaretShift = true;
-            }
-        }*/
         isShift = event.getModifierState("Shift") ? true : false;
         isCapsLock = event.getModifierState("CapsLock") ? true : false;
         arrowButtons();
@@ -151,7 +137,7 @@ window.onload = () => {
             setCaret(textarea.selectionEnd+1);
             isCaretShift = true;
         }
-        if (event.key == 'ArrowUp') {
+        /*if (event.key == 'ArrowUp') {
             let content = textarea.textContent.split(''),
                 indexesOfLineBreaks = [],
                 caretPosition = textarea.selectionEnd;
@@ -163,18 +149,22 @@ window.onload = () => {
             let length = indexesOfLineBreaks.length;
             let caretNewPosition;
             if (length >= 2) {
-                caretNewPosition = indexesOfLineBreaks[length-2] + (caretPosition - indexesOfLineBreaks[length-1]);
+                if ((indexesOfLineBreaks[length-1] - indexesOfLineBreaks[length-2]) < (caretPosition - indexesOfLineBreaks[length-1])) {
+                    caretNewPosition = indexesOfLineBreaks[length-1] - 1;
+                } else {
+                    caretNewPosition = indexesOfLineBreaks[length-2] + (caretPosition - indexesOfLineBreaks[length-1]);
+                }
                 setCaret(caretNewPosition);
                 isCaretShift = true;
             }
-        }
+        }*/
     }
 
     function swapLanguage(arrayOfSymbols) {
         arrOfKeys.forEach((item, i) => {
             item.textContent = `${arrayOfSymbols[i]}`;
         });
-        languageContainer.textContent = `${language}`;
+        languageContainer.textContent = `${language}(Ctrl+Shift)`;
     }
 
     function textOutput(pressedButton) {
