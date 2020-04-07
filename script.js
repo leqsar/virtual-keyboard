@@ -201,8 +201,15 @@ window.onload = () => {
     }
 
     function defineButton() {
-        let key = ((isCapsLock) && (event.key !== 'CapsLock')) || ((isShift) && (event.key !== 'Shift')) ? event.key.toLowerCase() : event.key,
-            indexOfPushedButton = russianSymbols.indexOf(key) == -1 ? englishSymbols.indexOf(key) : russianSymbols.indexOf(key);
+        let key = event.key;
+        if (isCapsLock || isShift) {
+            if (specialButtons.indexOf(event.key) !== -1) {
+                key = event.key;
+            } else {
+                key = event.key.toLowerCase();
+            }
+        }
+        let indexOfPushedButton = russianSymbols.indexOf(key) == -1 ? englishSymbols.indexOf(key) : russianSymbols.indexOf(key);
         elem = arrOfKeys[indexOfPushedButton];
         specialButtonsSelector();
     }
