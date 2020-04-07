@@ -3,6 +3,7 @@ window.onload = () => {
         russianSymbols = ['ё', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace', 'Tab', 'й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х', 'ъ', `\x5c`, 'Delete', 'CapsLock', 'ф', 'ы', 'в', 'а', 'п', 'р', 'о', 'л', 'д', 'ж', 'э', 'Enter', 'Shift', 'я', 'ч', 'с', 'м', 'и', 'т', 'ь', 'б', 'ю', '.', 'ArrowUp', 'Shift', 'Control', 'Win', 'Alt', ' ', 'Alt', 'Control', 'ArrowLeft', 'ArrowDown', 'ArrowRight'],
         englishSymbols = ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace', 'Tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '|', 'Delete', 'CapsLock', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\x27', 'Enter', 'Shift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', 'ArrowUp', 'Shift', 'Control', 'Win', 'Alt', ' ', 'Alt', 'Control', 'ArrowLeft', 'ArrowDown', 'ArrowRight'],
         specialButtons = ['Tab', 'Shift', 'Meta', 'Alt', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter', 'Backspace', 'Delete', 'CapsLock', 'Control'],
+        symbolsFromNumbers = ['!', '@', '#', '$', '%', '%', '^', '&', '*', '(', ')', '_', '+'],
         language = sessionStorage.getItem('language') == null ? 'english' : sessionStorage.getItem('language'),
         isCapsLock = false,
         isShift = false,
@@ -137,27 +138,6 @@ window.onload = () => {
             setCaret(textarea.selectionEnd+1);
             isCaretShift = true;
         }
-        /*if (event.key == 'ArrowUp') {
-            let content = textarea.textContent.split(''),
-                indexesOfLineBreaks = [],
-                caretPosition = textarea.selectionEnd;
-            content.forEach((item, i) => {
-                if (item == "\n") indexesOfLineBreaks.push(i);
-            });
-            indexesOfLineBreaks.filter(elem => elem < caretPosition);
-            indexesOfLineBreaks.splice(0, 0, 1);
-            let length = indexesOfLineBreaks.length;
-            let caretNewPosition;
-            if (length >= 2) {
-                if ((indexesOfLineBreaks[length-1] - indexesOfLineBreaks[length-2]) < (caretPosition - indexesOfLineBreaks[length-1])) {
-                    caretNewPosition = indexesOfLineBreaks[length-1] - 1;
-                } else {
-                    caretNewPosition = indexesOfLineBreaks[length-2] + (caretPosition - indexesOfLineBreaks[length-1]);
-                }
-                setCaret(caretNewPosition);
-                isCaretShift = true;
-            }
-        }*/
     }
 
     function swapLanguage(arrayOfSymbols) {
@@ -200,6 +180,9 @@ window.onload = () => {
             }
         }
         let indexOfPushedButton = russianSymbols.indexOf(key) == -1 ? englishSymbols.indexOf(key) : russianSymbols.indexOf(key);
+        if (indexOfPushedButton == -1) {
+            indexOfPushedButton = symbolsFromNumbers.indexOf(key);
+        }
         elem = arrOfKeys[indexOfPushedButton];
         specialButtonsSelector();
     }
