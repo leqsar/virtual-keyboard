@@ -1,44 +1,62 @@
 window.onload = () => {
-    let key, text, elem;
-    let arrayOfRussianSymbols = ['ё', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace', 'Tab', 'й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х', 'ъ', '|', 'Delete', 'CapsLock', 'ф', 'ы', 'в', 'а', 'п', 'р', 'о', 'л', 'д', 'ж', 'э', 'Enter', 'Shift', 'я', 'ч', 'с', 'м', 'и', 'т', 'ь', 'б', 'ю', '.', 'ArrowUp', 'Shift', 'Control', 'Win', 'Alt', ' ', 'Alt', 'Ctrl', 'ArrowLeft', 'ArrowDown', 'ArrowRight'],
-        arrayOfEnglishSymbols = ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace', 'Tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '|', 'Delete', 'CapsLock', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '', 'Enter', 'Shift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', 'ArrowUp', 'Shift', 'Control', 'Win', 'Alt', ' ', 'Alt', 'Ctrl', 'ArrowLeft', 'ArrowDown', 'ArrowRight'],
+    let key, text, elem,
+        russianSymbols = ['ё', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace', 'Tab', 'й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х', 'ъ', '|', 'Delete', 'CapsLock', 'ф', 'ы', 'в', 'а', 'п', 'р', 'о', 'л', 'д', 'ж', 'э', 'Enter', 'Shift', 'я', 'ч', 'с', 'м', 'и', 'т', 'ь', 'б', 'ю', '.', 'ArrowUp', 'Shift', 'Control', 'Win', 'Alt', ' ', 'Alt', 'Ctrl', 'ArrowLeft', 'ArrowDown', 'ArrowRight'],
+        englishSymbols = ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace', 'Tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '|', 'Delete', 'CapsLock', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '', 'Enter', 'Shift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', 'ArrowUp', 'Shift', 'Control', 'Win', 'Alt', ' ', 'Alt', 'Ctrl', 'ArrowLeft', 'ArrowDown', 'ArrowRight'],
         specialButtons = ['Tab', 'Shift', 'Meta', 'Alt', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter', 'Backspace', 'Delete', 'CapsLock', 'Control'],
         language = sessionStorage.getItem('language') == null ? 'english' : sessionStorage.getItem('language'),
         isCapsLock = false,
-        isShift = false;
+        isShift = false,
+        isCaretShift = false,
+        specialSymbols = {
+            'Tab':'\t',
+            'Enter':'\n'
+        };
     const body = document.querySelector('body'),
         keyboard = document.createElement('DIV'),
         textarea = document.createElement('textarea'),
         arrOfKeys = keyboard.childNodes;
-    let specialSymbols = {
-        'Tab':'\t',
-        'Enter':'\n'
-    }
     body.append(textarea);
     body.append(keyboard);
-    textarea.setAttribute('readonly', 'readonly');
     keyboard.classList.add('keyboard-wrap');
 
     if (language == 'russian') {
-        keyGeneration(arrayOfRussianSymbols);
+        keyGeneration(russianSymbols);
     } else {
-        keyGeneration(arrayOfEnglishSymbols);
+        keyGeneration(englishSymbols);
     }
+
+    textarea.addEventListener('keydown', event => {
+        event.preventDefault();
+    })
 
     document.addEventListener('keydown', event => {
         if ((event.ctrlKey) && (event.shiftKey)) {
             language = language == 'russian' ? 'english' : 'russian';
-            language == 'russian' ? swapLanguage(arrayOfRussianSymbols) : swapLanguage(arrayOfEnglishSymbols);
+            language == 'russian' ? swapLanguage(russianSymbols) : swapLanguage(englishSymbols);
             sessionStorage.setItem('language',`${language}`);
         }
         if (specialButtons.indexOf(event.key) !== -1) {
             event.preventDefault();
+        }
+        if (event.key == 'ArrowLeft') {
+            setCaret(textarea.selectionEnd-1);
+            isCaretShift = true;
+        }
+        if (event.key == 'ArrowRight') {
+            setCaret(textarea.selectionEnd+1);
+            isCaretShift = true;
         }
         isShift = event.getModifierState("Shift") ? true : false;
         isCapsLock = event.getModifierState("CapsLock") ? true : false;
         defineButton();
         elem.classList.add('pushed-button');
         textOutput(elem);
+        if (!isCaretShift) {
+            setCaret(textarea.textContent.length);
+        }
+        if (textarea.selectionEnd == textarea.textContent.length) {
+            isCaretShift = false;
+        }
     });
     document.addEventListener('keyup', event => {
         defineButton();
@@ -88,22 +106,36 @@ window.onload = () => {
     }
 
     function textOutput(pressedButton) {
+        let textareaContent = textarea.textContent.split(''),
+            caretPosition = textarea.selectionEnd;
         if (specialSymbols[pressedButton.textContent] !== undefined) {
-            textarea.textContent = `${textarea.textContent+specialSymbols[pressedButton.textContent]}`;
+            outputGeneration(specialSymbols[pressedButton.textContent]);
         } else if (specialButtons.indexOf(pressedButton.textContent) !== -1) {
             textarea.textContent = `${textarea.textContent}`;
+            if (!(4 <= specialButtons.indexOf(event.key) <= 7)) {
+                setCaret(caretPosition+1);
+            }
         } else if (isCapsLock || isShift) {
-            textarea.textContent = `${textarea.textContent+pressedButton.textContent.toUpperCase()}`;
+            outputGeneration(pressedButton.textContent.toUpperCase());
         } else {
-            textarea.textContent = `${textarea.textContent+pressedButton.textContent}`;
+            outputGeneration(pressedButton.textContent);
+        }
+
+        function outputGeneration(symbol) {
+            textareaContent.splice(caretPosition, 0, symbol);
+            textarea.textContent = `${textareaContent.join('')}`;
+            setCaret(caretPosition+1);
         }
     }
 
     function defineButton() {
         let key = ((isCapsLock) && (event.key !== 'CapsLock')) || ((isShift) && (event.key !== 'Shift')) ? event.key.toLowerCase() : event.key,
-            indexOfPushedButton = arrayOfRussianSymbols.indexOf(key) == -1 ? arrayOfEnglishSymbols.indexOf(key) : arrayOfRussianSymbols.indexOf(key);
-            console.log(key);
+            indexOfPushedButton = russianSymbols.indexOf(key) == -1 ? englishSymbols.indexOf(key) : russianSymbols.indexOf(key);
         elem = arrOfKeys[indexOfPushedButton];
         specialButtonsSelector();
+    }
+
+    function setCaret(position) {
+        textarea.selectionStart = textarea.selectionEnd = position;
     }
 }
