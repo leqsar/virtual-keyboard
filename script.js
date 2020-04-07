@@ -78,6 +78,13 @@ window.onload = () => {
                 isCaretShift = true;
             }
         }*/
+        if (event.key == 'Backspace') {
+            let content = textarea.textContent.split(''),
+                caretPosition = textarea.selectionEnd;
+            content.splice(caretPosition-1, 1);
+            textarea.textContent = `${content.join('')}`;
+            setCaret(caretPosition-1);
+        }
         isShift = event.getModifierState("Shift") ? true : false;
         isCapsLock = event.getModifierState("CapsLock") ? true : false;
         defineButton();
