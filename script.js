@@ -1,7 +1,7 @@
 window.onload = () => {
     let key, text, elem,
-        russianSymbols = ['ё', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace', 'Tab', 'й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х', 'ъ', '|', 'Delete', 'CapsLock', 'ф', 'ы', 'в', 'а', 'п', 'р', 'о', 'л', 'д', 'ж', 'э', 'Enter', 'Shift', 'я', 'ч', 'с', 'м', 'и', 'т', 'ь', 'б', 'ю', '.', 'ArrowUp', 'Shift', 'Control', 'Win', 'Alt', ' ', 'Alt', 'Ctrl', 'ArrowLeft', 'ArrowDown', 'ArrowRight'],
-        englishSymbols = ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace', 'Tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '|', 'Delete', 'CapsLock', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '', 'Enter', 'Shift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', 'ArrowUp', 'Shift', 'Control', 'Win', 'Alt', ' ', 'Alt', 'Ctrl', 'ArrowLeft', 'ArrowDown', 'ArrowRight'],
+        russianSymbols = ['ё', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace', 'Tab', 'й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х', 'ъ', '|', 'Delete', 'CapsLock', 'ф', 'ы', 'в', 'а', 'п', 'р', 'о', 'л', 'д', 'ж', 'э', 'Enter', 'Shift', 'я', 'ч', 'с', 'м', 'и', 'т', 'ь', 'б', 'ю', '.', 'ArrowUp', 'Shift', 'Control', 'Win', 'Alt', ' ', 'Alt', 'Control', 'ArrowLeft', 'ArrowDown', 'ArrowRight'],
+        englishSymbols = ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace', 'Tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '|', 'Delete', 'CapsLock', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '', 'Enter', 'Shift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', 'ArrowUp', 'Shift', 'Control', 'Win', 'Alt', ' ', 'Alt', 'Control', 'ArrowLeft', 'ArrowDown', 'ArrowRight'],
         specialButtons = ['Tab', 'Shift', 'Meta', 'Alt', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter', 'Backspace', 'Delete', 'CapsLock', 'Control'],
         language = sessionStorage.getItem('language') == null ? 'english' : sessionStorage.getItem('language'),
         isCapsLock = false,
@@ -46,6 +46,38 @@ window.onload = () => {
             setCaret(textarea.selectionEnd+1);
             isCaretShift = true;
         }
+        if (event.key == 'ArrowUp') {
+            let content = textarea.textContent.split(''),
+                indexesOfLineBreaks = [],
+                caretPosition = textarea.selectionEnd;
+            content.forEach((item, i) => {
+                if (item == "\n") indexesOfLineBreaks.push(i);
+            });
+            indexesOfLineBreaks.filter(elem => elem < caretPosition);
+            let length = indexesOfLineBreaks.length;
+            let caretNewPosition;
+            if (length >= 2) {
+                caretNewPosition = indexesOfLineBreaks[length-2] + (caretPosition - indexesOfLineBreaks[length-1]);
+                setCaret(caretNewPosition);
+                isCaretShift = true;
+            }
+        }
+        /*if (event.key == 'ArrowDown') {
+            let content = textarea.textContent.split(''),
+                indexesOfLineBreaks = [],
+                caretPosition = textarea.selectionEnd;
+            content.forEach((item, i) => {
+                if (item == "\n") indexesOfLineBreaks.push(i);
+            });
+            indexesOfLineBreaks.filter(elem => elem < caretPosition);
+            let length = indexesOfLineBreaks.length;
+            let caretNewPosition;
+            if (length >= 2) {
+                caretNewPosition = indexesOfLineBreaks[length-2] + (caretPosition - indexesOfLineBreaks[length-1]);
+                setCaret(caretNewPosition);
+                isCaretShift = true;
+            }
+        }*/
         isShift = event.getModifierState("Shift") ? true : false;
         isCapsLock = event.getModifierState("CapsLock") ? true : false;
         defineButton();
@@ -64,6 +96,7 @@ window.onload = () => {
         animation(elem);
         elem.classList.remove('pushed-button');
     });
+
     keyboard.addEventListener('mousedown', event => {
         if (event.target.textContent == 'CapsLock') {
             alert('you can push capslock button by mouse, but this action wouldnt do anything, because in your system capslock will not change');
