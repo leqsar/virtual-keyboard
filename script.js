@@ -1,7 +1,7 @@
 window.onload = () => {
     let key, text, elem,
         russianSymbols = ['ё', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace', 'Tab', 'й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х', 'ъ', `\x5c`, 'Delete', 'CapsLock', 'ф', 'ы', 'в', 'а', 'п', 'р', 'о', 'л', 'д', 'ж', 'э', 'Enter', 'Shift', 'я', 'ч', 'с', 'м', 'и', 'т', 'ь', 'б', 'ю', '.', 'ArrowUp', 'Shift', 'Control', 'Win', 'Alt', ' ', 'Alt', 'Control', 'ArrowLeft', 'ArrowDown', 'ArrowRight'],
-        englishSymbols = ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace', 'Tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '|', 'Delete', 'CapsLock', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '', 'Enter', 'Shift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', 'ArrowUp', 'Shift', 'Control', 'Win', 'Alt', ' ', 'Alt', 'Control', 'ArrowLeft', 'ArrowDown', 'ArrowRight'],
+        englishSymbols = ['`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'Backspace', 'Tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '|', 'Delete', 'CapsLock', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\x27', 'Enter', 'Shift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', 'ArrowUp', 'Shift', 'Control', 'Win', 'Alt', ' ', 'Alt', 'Control', 'ArrowLeft', 'ArrowDown', 'ArrowRight'],
         specialButtons = ['Tab', 'Shift', 'Meta', 'Alt', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter', 'Backspace', 'Delete', 'CapsLock', 'Control'],
         language = sessionStorage.getItem('language') == null ? 'english' : sessionStorage.getItem('language'),
         isCapsLock = false,
@@ -15,12 +15,15 @@ window.onload = () => {
         keyboard = document.createElement('DIV'),
         textarea = document.createElement('textarea'),
         languageContainer = document.createElement('SPAN'),
+        warningContainer = document.createElement('P'),
         arrOfKeys = keyboard.childNodes;
     body.append(languageContainer);
     body.append(textarea);
     body.append(keyboard);
+    body.append(warningContainer);
     keyboard.classList.add('keyboard-wrap');
     languageContainer.textContent = `${language}`;
+    warningContainer.textContent = 'You can click on CapsLock BY MOUSE, but nothing will happen, because state of Capslock in your system will not change';
 
     if (language == 'russian') {
         keyGeneration(russianSymbols);
@@ -80,7 +83,12 @@ window.onload = () => {
 
     keyboard.addEventListener('mousedown', event => {
         if (event.target.textContent == 'CapsLock') {
-            alert('you can push capslock button by mouse, but this action wouldnt do anything, because in your system capslock will not change');
+            if (warningContainer.style.visibility == 'visible') {
+                warningContainer.style.opacity = '1';
+            } else {
+                warningContainer.style.visibility = 'visible';
+                warningContainer.style.opacity = '0';
+            }
         }
         event.target.classList.add('pushed-button');
         animation(event.target);
